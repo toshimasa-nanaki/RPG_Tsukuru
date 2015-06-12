@@ -1,7 +1,24 @@
 enchant();
 
 window.onload = function() {
-    var game = new Game(320, 320);
+    var query = window.location.search.toQueryParams();
+    if(!query.run){
+      window.location.href = window.location.href + "?run=true";
+    }
+    var game = new Game(320, 480);
+
+    var scale_w = window.innerWidth/320;
+    var scale_h = window.innerHeight/480;
+    if (scale_h >= scale_w){
+      game.scale = scale_w;
+    }else{
+      game.scale = scale_h;
+    }
+    var left = (window.innerWidth - (game.width * game.scale)) / 2;
+    var enchantStage = document.getElementById('enchant-stage');
+    enchantStage.style.position = "absolute";
+    enchantStage.style.left = left + "px";
+    game._pageX = left;
     game.fps = 30;
     game.preload('map1.gif', 'chara0.gif');
     game.onload = function() {
@@ -152,7 +169,7 @@ window.onload = function() {
             this.frame = this.direction * 3 + this.walk;
             if (this.isMoving) {
                 this.moveBy(this.vx, this.vy);
- 
+
                 if (!(game.frame % 3)) {
                     this.walk++;
                     this.walk %= 3;
@@ -186,7 +203,7 @@ window.onload = function() {
                 }
             }
         });
-        
+
         var npc = new Sprite(32, 32);
         npc.x = 5 * 16 - 8;
         npc.y = 3 * 16;
@@ -201,7 +218,7 @@ window.onload = function() {
         	this.frame = this.direction * 3 + this.walk;
             if (this.isMoving) {
                 this.moveBy(this.vx, this.vy);
- 
+
                 if (!(game.frame % 3)) {
                     this.walk++;
                     this.walk %= 3;
@@ -212,7 +229,7 @@ window.onload = function() {
                 }
             } else {
 		var dir = Math.floor(Math.random()*4+1);
-		var move = Math.floor(Math.random()*10); 
+		var move = Math.floor(Math.random()*10);
                 this.vx = this.vy = 0;
                 if (dir == 4 && !move) {
                     this.direction = 1;
@@ -248,9 +265,9 @@ window.onload = function() {
 
         var pad = new Pad();
         pad.x = 0;
-        pad.y = 220;
+        pad.y = 380;
         game.rootScene.addChild(pad);
-        
+
 
         game.rootScene.addEventListener('enterframe', function(e) {
             var x = Math.min((game.width  - 16) / 2 - player.x, 0);
